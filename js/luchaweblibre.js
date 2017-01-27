@@ -80,11 +80,7 @@ function setup(){
     pWalk.anchor.set(.5,.5);
     pWalk.animationSpeed = .1;
     stage.addChild(pWalk);
-
-    let phead = new Sprite(TextureCache['spHead.png']);
-    phead.anchor.set(.5,.5);
-    phead.position.set(250, 190);
-    stage.addChild(phead);
+    pWalk.play();
 
     //set the game state
     state = play;
@@ -100,8 +96,8 @@ function gameLoop(){
 }
 
 function play(){
-    pWalk.x += pWalk.vx;
-    logo.x += 1;
+    //pWalk.x += pWalk.vx;
+    //logo.x += 1;
 }
 
 function end(){
