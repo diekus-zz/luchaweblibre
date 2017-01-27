@@ -67,7 +67,7 @@ function loadAssets(){
 
 function setup(){
     //manage assets
-    logo = new Sprite(resources['img/luchaWebLibre.png'].texture);
+    logo = new Sprite(resources['../img/luchaWebLibre.png'].texture);
     logo.position.set(150, 150);
     logo.anchor.set(.5, .5);
     logo.scale.set(.5, .5);
