@@ -1,113 +1,70 @@
-/* ALIASES */
-let MovieClip = PIXI.extras.MovieClip,
-Container = PIXI.Container,
-autoDetectRenderer = PIXI.autoDetectRenderer,
-loader = PIXI.loader,
-resources = PIXI.loader.resources,
-Sprite = PIXI.Sprite,
-TextureCache = PIXI.utils.TextureCache;
+let game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
-/* GLOBAL VARIABLES */
-let stage = null,
- renderer = null,
- state = null;
+let platforms;
 
-/* SPRITES */
- let logo = null,
- pWalk = null,
- bg = null;
-
- /* FUNCTIONS */
-function init(){
-    stage = new Container();
-    renderer = autoDetectRenderer(window.innerWidth, window.innerHeight,{transparent:true});
-    renderer.autoResize = true;
-    document.body.appendChild(renderer.view);
-
-    // window.addEventListener("resize", event => {  scaleToWindow(renderer.view); });
-    //sets keyboard event
-    let upKey = keyboard(38);
-    let downKey = keyboard(40);
-    let leftKey = keyboard(37);
-    let rightKey = keyboard(39);
-
-    upKey.press = () => {};
-    upKey.release = () => {};
-    downKey.press = () => {};
-    downKey.release = () => {};
-    leftKey.press = () => {};
-    leftKey.release = () => {};
-    rightKey.press = () => {
-        walk(pWalk, 'right', true);
-    };
-    rightKey.release = () => {
-        walk(pWalk, 'right', false);
-    };
-
-        
-    loadAssets();    
+function preload() {
+    game.load.image('bg', 'img/bgxp.jpg');
+    game.load.image('logo', 'img/logolwl.png');
+    game.load.image('ground', 'img/ground.png');
+    game.load.atlas('panda', 'img/panda.png', 'img/panda.json');
 }
 
-function walk(spr, dir, motion, speed){
-    if(motion){
-        spr.play();
-        spr.vx = speed;
+function create() {
+
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.add.sprite(0,0, 'bg');
+    let logo = game.add.sprite(25,25,'logo');
+    logo.scale.setTo(.25,.25);
+
+    platforms = game.add.group();
+    platforms.enableBody = true;
+    
+    let ground = platforms.create(0, game.world.height - 70, 'ground');
+    ground.scale.setTo(6, 2);
+    ground.body.immovable = true;
+
+    let ledge = platforms.create(200, 200, 'ground');
+    ledge.body.immovable = true;
+    ledge = platforms.create(-150, 250, 'ground');
+    ledge.body.immovable = true;
+
+    player = game.add.sprite(32, game.world.height - 450, 'panda');
+    game.physics.arcade.enable(player);
+    player.body.bounce.y = 0.2;
+    player.body.gravity.y = 600;
+    player.body.collideWorldBounds = true;
+
+    player.animations.add('left', ['spWalkL1.png','spWalkL2.png'], 5, true);
+    player.animations.add('right', ['spWalkR1.png','spWalkR2.png'], 5, true);
+    
+
+    cursors = game.input.keyboard.createCursorKeys();
+
+}
+
+function update() {
+    //  Collide the player and the stars with the platforms
+    game.physics.arcade.collide(player, platforms);
+
+    //  Reset the players velocity (movement)
+    player.body.velocity.x = 0;
+
+    if (cursors.left.isDown){
+        player.body.velocity.x = -150;
+        player.animations.play('left');
+        //alert('left');
+    }
+    else if (cursors.right.isDown){
+        player.body.velocity.x = 150;
+       player.animations.play('right');
     }
     else{
-        spr.stop();
-        spr.vx = 0;
+        player.animations.stop();
+        player.frame = 0;
     }
-}
-
-function loadAssets(){
-    loader.add([
-        '/img/luchaWebLibre.png',
-        '/img/panda.json',
-        '/img/foxy.json',
-        '/img/clipster.json',
-        '/img/squirrel.json',
-        '/img/bgxp.jpg',
-
-    ]).load(setup);
-}
-
-function setup(){
-    //manage assets
-    bg = new Sprite();
-
-    logo = new Sprite(resources['/img/luchaWebLibre.png'].texture);
-    logo.position.set(150, 150);
-    logo.anchor.set(.5, .5);
-    logo.scale.set(.5, .5);
-    stage.addChild(logo);
-
-    let su = new SpriteUtilities(PIXI, renderer);
-    let pWalkTextures = [resources['/img/panda.json'].textures['spWalk1.png'], resources['/img/panda.json'].textures['spWalk2.png']];
-    pWalk = new MovieClip(pWalkTextures);
-    pWalk.position.set(250, 250);
-    pWalk.anchor.set(.5,.5);
-    pWalk.animationSpeed = .1;
-    stage.addChild(pWalk);
-    pWalk.play();
-
-    //set the game state
-    state = play;
-    //start the gameloop
-    gameLoop();
-}
-
-function gameLoop(){
-    requestAnimationFrame(gameLoop);
-    state();
-    renderer.render(stage);
-
-}
-
-function play(){
-    //pWalk.x += pWalk.vx;
-    //logo.x += 1;
-}
-
-function end(){
-
+    if (cursors.up.isDown && player.body.touching.down){
+        player.body.velocity.y = -350;
+    }
+    
+    
 }

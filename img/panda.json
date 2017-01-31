@@ -9,7 +9,7 @@
 	"sourceSize": {"w":121,"h":166},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"spWalk1.png":
+"spWalkL1.png":
 {
 	"frame": {"x":0,"y":166,"w":121,"h":166},
 	"rotated": false,
@@ -18,9 +18,27 @@
 	"sourceSize": {"w":121,"h":166},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"spWalk2.png":
+"spWalkL2.png":
 {
 	"frame": {"x":0,"y":332,"w":121,"h":166},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":121,"h":166},
+	"sourceSize": {"w":121,"h":166},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"spWalkR1.png":
+{
+	"frame": {"x":0,"y":498,"w":121,"h":166},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":121,"h":166},
+	"sourceSize": {"w":121,"h":166},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"spWalkR2.png":
+{
+	"frame": {"x":0,"y":664,"w":121,"h":166},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":121,"h":166},
@@ -32,8 +50,8 @@
 	"version": "1.0",
 	"image": "panda.png",
 	"format": "RGBA8888",
-	"size": {"w":121,"h":498},
+	"size": {"w":121,"h":830},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:1082dc02e96d11aaa08705fd02ea1cf2:1e2b53f5ba58cc9d744c5424b39a7d87:d0e9f6f256a5168b1e6e5deae6efca28$"
+	"smartupdate": "$TexturePacker:SmartUpdate:d24b5c1b316534aeaf37ae8a17db9d6b:fd927fc074b76f0aec7d2b75a1e35d5a:d0e9f6f256a5168b1e6e5deae6efca28$"
 }
 }
