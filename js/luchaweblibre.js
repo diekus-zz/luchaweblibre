@@ -14,7 +14,8 @@ let stage = null,
 
 /* SPRITES */
  let logo = null,
- pWalk = null;
+ pWalk = null,
+ bg = null;
 
  /* FUNCTIONS */
 function init(){
@@ -60,21 +61,28 @@ function walk(spr, dir, motion, speed){
 
 function loadAssets(){
     loader.add([
-        'img/luchaWebLibre.png',
-        'img/panda.json'
+        '/img/luchaWebLibre.png',
+        '/img/panda.json',
+        '/img/foxy.json',
+        '/img/clipster.json',
+        '/img/squirrel.json',
+        '/img/bgxp.jpg',
+
     ]).load(setup);
 }
 
 function setup(){
     //manage assets
-    logo = new Sprite(resources['img/luchaweblibre.png'].texture);
+    bg = new Sprite();
+
+    logo = new Sprite(resources['/img/luchaWebLibre.png'].texture);
     logo.position.set(150, 150);
     logo.anchor.set(.5, .5);
     logo.scale.set(.5, .5);
     stage.addChild(logo);
 
     let su = new SpriteUtilities(PIXI, renderer);
-    let pWalkTextures = [resources['img/panda.json'].textures['spWalk1.png'], resources['img/panda.json'].textures['spWalk2.png']];
+    let pWalkTextures = [resources['/img/panda.json'].textures['spWalk1.png'], resources['/img/panda.json'].textures['spWalk2.png']];
     pWalk = new MovieClip(pWalkTextures);
     pWalk.position.set(250, 250);
     pWalk.anchor.set(.5,.5);

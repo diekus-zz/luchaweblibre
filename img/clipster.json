@@ -1,0 +1,39 @@
+{"frames": {
+
+"ffStand.png":
+{
+	"frame": {"x":0,"y":0,"w":132,"h":161},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":161},
+	"sourceSize": {"w":132,"h":161},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"ffWalk1.png":
+{
+	"frame": {"x":132,"y":0,"w":132,"h":161},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":161},
+	"sourceSize": {"w":132,"h":161},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"ffWalk2.png":
+{
+	"frame": {"x":264,"y":0,"w":132,"h":161},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":161},
+	"sourceSize": {"w":132,"h":161},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "clipster.png",
+	"format": "RGBA8888",
+	"size": {"w":396,"h":161},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:17fca8b5baf1d040ec17e4c0af6a7806:34cca519c8a1bc1a064f5137485c349e:10293a3fb95eb9e92415f8ada4060204$"
+}
+}

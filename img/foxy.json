@@ -1,0 +1,39 @@
+{"frames": {
+
+"ffStand.png":
+{
+	"frame": {"x":0,"y":0,"w":132,"h":161},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":161},
+	"sourceSize": {"w":132,"h":161},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"ffWalk1.png":
+{
+	"frame": {"x":132,"y":0,"w":132,"h":161},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":161},
+	"sourceSize": {"w":132,"h":161},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"ffWalk2.png":
+{
+	"frame": {"x":264,"y":0,"w":132,"h":161},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":161},
+	"sourceSize": {"w":132,"h":161},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "foxy.png",
+	"format": "RGBA8888",
+	"size": {"w":396,"h":161},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:0094f5ed1242e1d7af3bae6857b9357b:34cca519c8a1bc1a064f5137485c349e:910cc3e0835ce8e238c7ecb40a961d54$"
+}
+}

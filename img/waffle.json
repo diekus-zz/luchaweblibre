@@ -1,0 +1,39 @@
+{"frames": {
+
+"qrwaffleStand.png":
+{
+	"frame": {"x":0,"y":0,"w":155,"h":161},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":155,"h":161},
+	"sourceSize": {"w":155,"h":161},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"qrwaffleWalk1.png":
+{
+	"frame": {"x":155,"y":0,"w":155,"h":161},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":155,"h":161},
+	"sourceSize": {"w":155,"h":161},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"qrwaffleWalk2.png":
+{
+	"frame": {"x":310,"y":0,"w":155,"h":161},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":155,"h":161},
+	"sourceSize": {"w":155,"h":161},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "waffle.png",
+	"format": "RGBA8888",
+	"size": {"w":465,"h":161},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:03affc2e7f1c7d493183a752ee582c6f:d527c0a8b87a90916999502a2d81a208:5ff456505c08ee0be8a49c087750c69e$"
+}
+}

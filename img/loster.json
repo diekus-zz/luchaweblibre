@@ -1,0 +1,39 @@
+{"frames": {
+
+"losterStand.png":
+{
+	"frame": {"x":0,"y":0,"w":161,"h":250},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":161,"h":250},
+	"sourceSize": {"w":161,"h":250},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"losterWalk1.png":
+{
+	"frame": {"x":161,"y":0,"w":161,"h":250},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":161,"h":250},
+	"sourceSize": {"w":161,"h":250},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"losterWalk2.png":
+{
+	"frame": {"x":322,"y":0,"w":161,"h":250},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":161,"h":250},
+	"sourceSize": {"w":161,"h":250},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "loster.png",
+	"format": "RGBA8888",
+	"size": {"w":483,"h":250},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:2af412bb0d171bd22f26a6c551a97dda:d115d3dcd9875b6f576253c32c253e38:1a99c43703b610f96e168a5ce013d090$"
+}
+}
