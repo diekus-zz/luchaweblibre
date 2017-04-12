@@ -1,0 +1,22 @@
+{
+  "lang": "en",
+  "dir": "ltr",
+  "name": "Lucha *Web* Libre",
+  "description": "A brawling game built on HTML5 by Samsung Internet",
+  "short_name": "Lucha *Web* Libre",
+  "icons": [{
+    "src": "img/icon192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  },
+  {
+    "src": "img/icon512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }],
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "theme_color": "#FF0064",
+  "background_color": "#FF0064"
+}

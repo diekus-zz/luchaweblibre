@@ -1,230 +1,190 @@
-PlayState = {};
+/********************* 
 
-PlayState.preload = function () {
-    this.game.load.image('bg', 'img/bgxp.jpg');
-    // this.game.load.image('logo', 'img/logolwl.png');
-    // this.game.load.image('ground', 'img/ground.png');
-    // this.game.load.spritesheet('panda', 'img/pandaSprite.png',121, 166);
-    // this.game.load.spritesheet('clipster', 'img/clipsterSprite.png', 99, 162);
-    // //game.load.spritesheet('pandaRay', 'img/pandaRay.png', x, y);
-    // //game.load.spritesheet('staple', 'img/staples.png', x, y);
-    // this.game.load.image('clip_special', 'img/clipster_projectile.png');
-    // this.game.load.image('panda_special', 'img/panda_projectile.png');
+PLAYER CLASS
 
-    this.game.load.json('level:1', 'data/level01.json');
+*********************/
+function Player (game, x, y, resource, setKeys){
+    Phaser.Sprite.call(this, game, x, y, resource);
+    this.anchor.set(.5,.5);
+    this.game.physics.enable(this);
+    this.body.collideWorldBounds = true;
+
+    //animations
+    this.animations.add('stop', [0]);
+    this.animations.add('run', [1,2], 8, true); 
+    this.animations.add('jump', [3]); 
+    this.animations.add('fall', [4]);    
+
+    this.keys = setKeys;
 }
 
-PlayState.create = function () {
+Player.prototype = Object.create(Phaser.Sprite.prototype);
 
+Player.prototype.constructor = Player;
+
+Player.prototype.move = function(dir){
+    const speed = 200;
+    this.body.velocity.x = dir * speed;
+    if(this.body.velocity.x < 0){
+        this.scale.x = -1;
+    }
+    else if(this.body.velocity.x > 0)
+    {
+        this.scale.x = 1;
+    }
+};
+
+Player.prototype.jump = function(){
+    const JUMP_SPEED = 600;
+    let canJump = this.body.touching.down;
+    if(canJump){
+        this.body.velocity.y = -JUMP_SPEED;
+    }
+};
+
+Player.prototype._getAnimationName = function(){
+    let name = 'stop';
+    //jump
+    if(this.body.velocity.y < 0){
+        name = 'jump';
+    }
+    else if(this.body.velocity.y > 0 && !this.body.touching.down){
+        name = 'fall';
+    }
+    else if(this.body.velocity.x !== 0 && this.body.touching.down){
+        name = 'run';
+    }
+    return name;
+};
+
+Player.prototype.update = function (){
+    let animationName = this._getAnimationName();
+    if(this.animations.name !== animationName){
+        this.animations.play(animationName);
+    }
+};
+
+/********************* 
+
+GAME
+
+*********************/
+
+PlayState = {};
+
+PlayState.init = function(){
+    this.game.renderer.renderSession.roundPixels = true;
+};
+
+PlayState._createP1Keys = function(){
+    var obj = {
+        up: this.game.input.keyboard.addKey(Phaser.Keyboard.UP),
+        left: this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
+        right: this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
+        down: this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
+    };
+    return obj;
+};
+
+PlayState._createP2Keys = function(){
+    var obj = {
+        up: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
+        down: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
+        left: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+        right: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
+    };
+    return obj;
+};
+
+PlayState.preload = function () {
+    //loads level graphics
+    this.game.load.image('bg', 'img/bgxp.jpg');
+    this.game.load.image('cloud:1', 'img/cloud_1.png');
+    this.game.load.image('cloud:2', 'img/cloud_2.png');
+    this.game.load.image('ground:green1', 'img/ground_green.png');
+    //load characters
+    this.game.load.spritesheet('panda','img/sp.png', 121, 166);
+    this.game.load.spritesheet('fox', 'img/ff.png', 137, 167);
+    //load level data
+    this.game.load.json('level:1', 'data/level01.json');
+    //load sounds
+    this.game.load.audio('sfx:jump', 'audio/jump.wav');
+};
+
+PlayState.create = function () {
     this.game.add.sprite(0,0, 'bg');
     this._loadLevel(this.game.cache.getJSON('level:1'));
 
-    // this.game.physics.startSystem(Phaser.Physics.ARCADE);
-    // let logo = game.add.sprite(25,25,'logo');
-    // logo.scale.setTo(.25,.25);
+    //create sound entities
+    this.sfx = {
+        jump:this.game.add.audio('sfx:jump')
+    };
+};
 
-    // platforms = game.add.group();
-    // platforms.enableBody = true;
-    
-    // let ground = platforms.create(0, game.world.height - 70, 'ground');
-    // ground.scale.setTo(6, 2);
-    // ground.body.immovable = true;
+PlayState._loadLevel = function (data) {
+    this.platforms = this.game.add.group();
 
-    // let ledge = platforms.create(200, 200, 'ground');
-    // ledge.body.immovable = true;
-    // ledge = platforms.create(-150, 250, 'ground');
-    // ledge.body.immovable = true;
+    data.platforms.forEach(this._spawnPlatform, this);
+    //create floor
+    var ground = this.platforms.create(0, this.game.world.height - 20, 'ground:green1');
+    ground.scale.setTo(200, 2);
+    this.game.physics.enable(ground);
+    ground.body.immovable = true;
+    ground.body.allowGravity = false;
 
-    // p1Movement = game.input.keyboard.createCursorKeys();
-    // p1Atk = createP1AttackKeys();
 
-    // p2Movement = createP2MoveKeys();
-    // p2Atk = createP2AttackKeys();
+    this._spawnCharacters({p1: data.p1, p2:data.p2});
+    const GRAVITY = 1200;
+    this.game.physics.arcade.gravity.y = GRAVITY;
+};
 
-    // addPlayers();
-}
+PlayState._spawnPlatform = function (platform) {
+    let sprite = this.platforms.create(platform.x, platform.y, platform.image);
+    this.game.physics.enable(sprite);
+    sprite.body.allowGravity = false;
+    sprite.body.immovable = true;
+};
+
+PlayState._spawnCharacters = function(data){
+    this.p1 = new Player(this.game, data.p1.x, data.p1.y, 'panda', PlayState._createP1Keys());
+    this.p2 = new Player(this.game, data.p2.x, data.p2.y, 'fox', PlayState._createP2Keys());
+
+
+    this.game.add.existing(this.p1);
+    this.game.add.existing(this.p2);
+};
 
 window.onload = function () {
-    let game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+    let game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '');
     game.state.add('play', PlayState);
     game.state.start('play');
-    ;
 }
 
-// let platforms;
-// let player1;
-// let player2;
-// let p1Atrib;
-// let p2Atrib;
-// let specialTimeoutp1 = 0;
-// let specialTimeoutp2 = 0;
+PlayState.update = function () {
+    this._handleCollisions();
+    this._handleInput();
+};
 
+PlayState._handleCollisions = function(){
+    this.game.physics.arcade.collide(this.p1, this.platforms);
+    this.game.physics.arcade.collide(this.p2, this.platforms);
+};
 
-
-function update() {
-    // movePlayer1();
-    // movePlayer2();
-    // p1Attack();
-    // p2Attack();
-}
-    
-// function addPlayers(){
-//     //Player 1
-//     player1 = game.add.sprite(game.world.width - 64, game.world.height - 450, 'panda');
-//     game.physics.arcade.enable(player1);
-//     player1.body.bounce.y = 0.2;
-//     player1.body.gravity.y = 1000;
-//     player1.body.collideWorldBounds = true;
-
-//     player1.animations.add('left', [0, 1], 5, true);
-//     player1.animations.add('right', [3, 4], 5, true);    
-
-//     //get p1 attributes
-//     p1Atrib = getPandaAttributes();
-    
-//     //Player 2
-//     player2 = game.add.sprite(32, game.world.height - 450, 'clipster');
-//     game.physics.arcade.enable(player2);
-//     player2.body.bounce.y = 0.2;
-//     player2.body.gravity.y = 1000;
-//     player2.body.collideWorldBounds = true;
-
-//     player2.animations.add('left', [1, 2], 5, true);
-//     player2.animations.add('right', [2, 1], 5, true);
-    
-//     //get p2 attributes
-//     p2Atrib = getClipsterAttributes();
-// }
-
-// function movePlayer1(){
-//     //  Collide the player and the stars with the platforms
-//     game.physics.arcade.collide(player1, platforms);
-//     game.physics.arcade.collide(player1, player2);
-
-//     //  Reset the players velocity (movement)
-//     player1.body.velocity.x = 0;
-
-//     if (p1Movement.left.isDown){
-//         player1.body.velocity.x = -p1Atrib.moveSpeed;
-//         player1.animations.play('left');
-//         //alert('left');
-//     }
-//     else if (p1Movement.right.isDown){
-//         player1.body.velocity.x = p1Atrib.moveSpeed;
-//         player1.animations.play('right');
-//     }
-//     else{
-//         player1.animations.stop();
-//         player1.frame = 0;
-//     }
-//     if (p1Movement.up.isDown && player1.body.touching.down){
-//         player1.body.velocity.y = p1Atrib.jumpForce;    
-//     }
-// }
-
-// function movePlayer2(){
-//     //  Collide the player and the stars with the platforms
-//     game.physics.arcade.collide(player2, platforms);
-
-//     //  Reset the players velocit1y (movement)
-//     player2.body.velocity.x = 0;
-
-//     if (p2Movement.left.isDown){
-//         player2.body.velocity.x = -p2Atrib.moveSpeed;
-//         player2.animations.play('left');
-//         //alert('left');
-//     }
-//     else if (p2Movement.right.isDown){
-//         player2.body.velocity.x = p2Atrib.moveSpeed;
-//         player2.animations.play('right');
-//     }
-//     else{
-//         player2.animations.stop();
-//         player2.frame = 0;
-//     }
-//     if (p2Movement.up.isDown && player2.body.touching.down){
-//         player2.body.velocity.y = p2Atrib.jumpForce;    
-//     }
-// }
-
-// function getPandaAttributes(){
-//     var panda = {
-//         jumpForce: -250,
-//         moveSpeed: 250,
-//         punchStrength: 10,
-//         blockPower: 5,
-//         specialStrength: 2,
-//         specialSpeed: 300,
-//         specialDelay: 300,
-//     };
-//     return panda;
-// }
-
-// function getClipsterAttributes(){
-//     var clipster = {
-//         jumpForce: -350,
-//         moveSpeed: 350,
-//         strength: 7,
-//         blockPower: 2,
-//         specialStrength: 5,
-//         specialSpeed: 500,
-//         specialDelay: 500,
-//     };
-//     return clipster;
-// }
-
-// function createP2MoveKeys(){
-//     var obj = {
-//         up: game.input.keyboard.addKey(Phaser.Keyboard.W),
-//         down: game.input.keyboard.addKey(Phaser.Keyboard.S),
-//         left: game.input.keyboard.addKey(Phaser.Keyboard.A),
-//         right: game.input.keyboard.addKey(Phaser.Keyboard.D),
-//     };
-//     return obj;
-// }
-
-// function createP1AttackKeys(){
-//     var obj = {
-//         punch: game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_7),
-//         special: game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_8),
-//     };
-//     return obj;
-// }
-
-// function createP2AttackKeys(){
-//     var obj = {
-//         punch: game.input.keyboard.addKey(Phaser.Keyboard.Y),
-//         special: game.input.keyboard.addKey(Phaser.Keyboard.U),
-//     };
-//     return obj;
-// }
-
-// function p1Attack(){
-//     if(p1Atk.punch.isDown){
-
-//     }
-//     else if(p1Atk.special.isDown && game.time.now > specialTimeoutp1){
-//        var special = game.add.sprite(player1.position.x + (player1.width *0.5), player1.position.y + (player1.height *0.5), 'panda_special');
-//        special.scale.setTo(.25,.25);
-//        game.physics.arcade.enable(special);
-//        special.body.gravity.y = 0;
-//        special.body.velocity.x = -p1Atrib.specialSpeed;
-
-//        specialTimeoutp1 = game.time.now + p1Atrib.specialDelay;
-//     }
-// }
-
-// function p2Attack(){
-//     if(p2Atk.punch.isDown){
-
-//     }
-//     else if(p2Atk.special.isDown && game.time.now > specialTimeoutp2){
-//        var special = game.add.sprite(player2.position.x + (player2.width *0.5), player2.position.y + (player2.height *0.5), 'clip_special');
-//        special.scale.setTo(.25,.25);
-//        game.physics.arcade.enable(special);
-//        special.body.gravity.y = 0;
-//        special.body.velocity.x = p2Atrib.specialSpeed;
-
-//        specialTimeoutp2 = game.time.now + p1Atrib.specialDelay;
-//     }
-// }
+PlayState._handleInput = function(){
+    if(PlayState.p1.keys.up.isDown){
+        PlayState.p1.jump();
+    } else if(PlayState.p1.keys.left.isDown){
+        PlayState.p1.move(-1);
+    } else if(PlayState.p1.keys.right.isDown){
+        PlayState.p1.move(1);
+    } else if(PlayState.p2.keys.up.isDown){
+        PlayState.p2.jump();
+    } else if(PlayState.p2.keys.left.isDown){
+        PlayState.p2.move(-1);
+    } else if(PlayState.p2.keys.right.isDown){
+        PlayState.p2.move(1);
+    } else {
+        PlayState.p1.move(0);
+        PlayState.p2.move(0);
+    }
+};
